@@ -22,12 +22,10 @@ public class NewsAPIClient {
 
         HttpServer server = HttpServer.create(new InetSocketAddress(PORT), 0);
 
-        // UI Context
         server.createContext("/", exchange -> {
             sendResponse(exchange, getFullUI(), "text/html");
         });
 
-        // API Proxy Context
         server.createContext("/api/news", exchange -> {
             Map<String, String> params = queryToMap(exchange.getRequestURI().getQuery());
             String query = params.getOrDefault("q", "");
@@ -51,7 +49,6 @@ public class NewsAPIClient {
         try {
             Path envPath = Paths.get(".env");
             if (Files.exists(envPath)) {
-                // Manual parse to avoid Property XML overhead
                 List<String> lines = Files.readAllLines(envPath);
                 for (String line : lines) {
                     if (line.startsWith("NEWSAPI_KEY=")) {
